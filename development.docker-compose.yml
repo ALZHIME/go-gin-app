@@ -1,0 +1,28 @@
+version: '3.9'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: gin.development.Dockerfile
+    container_name: go-gin
+    volumes:
+      - "./:/app"
+    working_dir: /app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:alpine
+    volumes:
+      - "redis_data:/data"
+    ports:
+      - target: 6379
+        published: 6379
+        protocol: tcp
+        mode: host
+
+volumes:
+  redis_data:
