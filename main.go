@@ -2,7 +2,10 @@ package main
 
 import (
 	"fmt"
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"go-app/session"
+	"go-app/users"
 	"net/http"
 )
 
@@ -65,9 +68,20 @@ func addBook(c *gin.Context) {
 func main() {
 	router := gin.Default()
 
+	redisStore, redisError := session.Init()
+	if redisStore == nil {
+		fmt.Println("Redis connect error", redisError)
+		return
+	}
+	router.Use(sessions.Sessions("redis_session", redisStore))
+
 	router.GET("/books", getBooks)
 	router.GET("/book/:id", getBook)
 	router.POST("/book", addBook)
+
+	userRoute := router.Group("/user")
+	userRoute.Use(users.UserMiddleware())
+	users.RegisterRouter(userRoute)
 
 	err := router.Run(":3000")
 	if err != nil {
