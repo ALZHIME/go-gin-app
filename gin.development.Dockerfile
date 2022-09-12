@@ -16,7 +16,7 @@ RUN go install -mod=mod github.com/githubnemo/CompileDaemon
 
 # RUN go install -mod=mod github.com/codegangsta/gin
 
-ENTRYPOINT CompileDaemon -polling -log-prefix=false --build="go build main.go" --command=./main
+ENTRYPOINT CompileDaemon -polling -log-prefix=false --build="go build -tags development main.go" --command=./main
 
 # COPY . .
 

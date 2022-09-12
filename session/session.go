@@ -3,18 +3,19 @@ package session
 import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/redis"
+	"go-app/variables"
 	"net/http"
 )
 
-const (
-	maximumIdleConnections = 20
-	networkMode            = "tcp"
-	redisAddress           = "redis:6379"
-	redisPassword          = ""
-	encryptKey             = "hello world"
-)
+var (
+	maximumIdleConnections = variables.MaximumIdleConnections()
+	networkMode            = variables.NetworkMode()
+	redisAddress           = variables.RedisAddress()
+	redisPassword          = variables.RedisPassword()
+	encryptKey             = variables.EncryptKey()
 
-var session redis.Store
+	session redis.Store
+)
 
 func Init() (redis.Store, error) {
 	store, redisError := redis.NewStore(maximumIdleConnections, networkMode, redisAddress, redisPassword, []byte(encryptKey))
