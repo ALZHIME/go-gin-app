@@ -7,10 +7,15 @@
 
 # Test binary, built with `go test -c`
 *.test
+main
+tmp/*
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
-main
+
+# local files and directories
+cert/*.crt
+cert/*.key
 
 # Dependency directories (remove the comment below to include it)
 # vendor/

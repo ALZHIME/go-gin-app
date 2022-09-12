@@ -65,15 +65,23 @@ func addBook(c *gin.Context) {
 	c.JSON(http.StatusCreated, newBook)
 }
 
+func enableCORS() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Header("Access-Control-Allow-Origin", "*")
+		c.Header("Access-Control-Allow-Headers", "*")
+	}
+}
+
 func main() {
 	router := gin.Default()
+	router.Use(enableCORS())
 
 	redisStore, redisError := session.Init()
 	if redisStore == nil {
 		fmt.Println("Redis connect error", redisError)
 		return
 	}
-	router.Use(sessions.Sessions("redis_session", redisStore))
+	router.Use(sessions.Sessions("cookie_name", redisStore))
 
 	router.GET("/books", getBooks)
 	router.GET("/book/:id", getBook)
@@ -83,7 +91,8 @@ func main() {
 	userRoute.Use(users.UserMiddleware())
 	users.RegisterRouter(userRoute)
 
-	err := router.Run(":3000")
+	// https://stackoverflow.com/questions/10175812/how-to-generate-a-self-signed-ssl-certificate-using-openssl
+	err := router.RunTLS(":3000", "./cert/localhost.crt", "./cert/localhost.key")
 	if err != nil {
 		fmt.Println(err)
 		return
