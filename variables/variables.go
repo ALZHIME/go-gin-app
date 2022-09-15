@@ -1,10 +1,16 @@
 package variables
 
+var assertPath string
+
 var maximumIdleConnections int
 var networkMode string
 var redisAddress string
 var redisPassword string
 var encryptKey string
+
+func AssertPath() string {
+	return assertPath
+}
 
 func MaximumIdleConnections() int {
 	return maximumIdleConnections

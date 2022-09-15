@@ -16,7 +16,7 @@ func getOrGenerateUuid(c *gin.Context) {
 		session.Set("uuid", userUuid)
 		err := session.Save()
 		if err != nil {
-			c.JSON(http.StatusServiceUnavailable, gin.H{"type": "session save error", "message": fmt.Sprint(err)})
+			c.AbortWithStatusJSON(http.StatusServiceUnavailable, gin.H{"type": "session save error", "message": fmt.Sprint(err)})
 		}
 	}
 	c.Set("userUuid", userUuid)

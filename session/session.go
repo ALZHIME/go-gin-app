@@ -8,6 +8,8 @@ import (
 )
 
 var (
+	assertPath = variables.AssertPath()
+
 	maximumIdleConnections = variables.MaximumIdleConnections()
 	networkMode            = variables.NetworkMode()
 	redisAddress           = variables.RedisAddress()
@@ -21,6 +23,7 @@ func Init() (redis.Store, error) {
 	store, redisError := redis.NewStore(maximumIdleConnections, networkMode, redisAddress, redisPassword, []byte(encryptKey))
 	store.Options(sessions.Options{
 		MaxAge:   60 * 60 * 24 * 7,
+		Path:     assertPath,
 		SameSite: http.SameSiteNoneMode,
 		Secure:   true,
 	})
